@@ -34,10 +34,10 @@ router.post("/", async (req, res) => {
         district,
         postalCode,
         gender,
-        deceasedBoolean,
-        maritialStatus,
+        // deceasedBoolean,
+        // maritialStatus,
         birthDate
-    } = req.body;
+    } = req.body
 
     const patientResource = {
         resourceType: "Bundle",
@@ -45,13 +45,12 @@ router.post("/", async (req, res) => {
         entry: [
             {
                 resource: {
-                    fullUrl: `urn:uuid:${uniqueId}`,
+                    // fullUrl: `urn:uuid:${uniqueId}`,
                     resourceType: "Patient",
-                    id: uniqueId,
+                    // id: uniqueId,
                     identifier: [
                         {
                             system: 'http://clientregistry.org/nationalId',
-                            value: nationalId,
                             type: {
                                 coding: [
                                     {
@@ -61,10 +60,10 @@ router.post("/", async (req, res) => {
                                 ],
                                 text: "National ID No."
                             },
+                            value: nationalId
                         },
                         {
                             system: 'http://clientregistry.org/passport',
-                            value: passport,
                             type: {
                                 coding: [
                                     {
@@ -74,10 +73,10 @@ router.post("/", async (req, res) => {
                                 ],
                                 text: "Passport"
                             },
+                            value: passport
                         },
                         {
                             system: 'http://clientregistry.org/eAFYA',
-                            value: eAFYAId,
                             type: {
                                 coding: [
                                     {
@@ -87,10 +86,10 @@ router.post("/", async (req, res) => {
                                 ],
                                 text: "eAFYA System ID"
                             },
+                            value: eAFYAId
                         },
                         {
                             system: 'http://clientregistry.org/patientId',
-                            value: patientId,
                             type: {
                                 coding: [
                                     {
@@ -100,12 +99,12 @@ router.post("/", async (req, res) => {
                                 ],
                                 text: "eAFYA Patient ID"
                             },
+                            value: patientId
                         },
                     ],
                     active: true,
                     name: [
                         {
-                            use: 'official',
                             family: surname,
                             given: [givenname, othername]
                         }
@@ -117,18 +116,15 @@ router.post("/", async (req, res) => {
                     telecom: [
                         {
                             system: 'phone',
-                            value: phoneNumber,
-                            use: 'home',
+                            value: phoneNumber
                         },
                         {
                             system: 'email',
-                            value: email,
-                            use: 'home',
+                            value: email
                         },
                     ],
                     address: [
                         {
-                            use: 'home',
                             line: [address],
                             city: city,
                             district: district,
@@ -136,7 +132,7 @@ router.post("/", async (req, res) => {
                             country: country,
                             extension: [
                                 {
-                                    url: null,
+                                    url: '',
                                     extension: [
                                         {
                                             url: "http://fhir.openmrs.org/ext/address#county",
@@ -169,11 +165,7 @@ router.post("/", async (req, res) => {
     }
 
     try {
-        const response = await axios.post(`${serverUrl}`, patientResource, {
-            headers: {
-                'Content-Type': 'application/fhir+json',
-            },
-        });
+        const response = await axios.post(`${serverUrl}`, patientResource);
         res.json({"message": "Patient Resource Created Successfully", response: response.data })
     } catch (error) {
         res.json({ "message": "Error Creating Patient Resource:", "error": error.message })
