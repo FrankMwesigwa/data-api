@@ -34,8 +34,8 @@ router.post("/", async (req, res) => {
         district,
         postalCode,
         gender,
-        // deceasedBoolean,
-        // maritialStatus,
+        deceasedBoolean,
+        maritialStatus,
         birthDate
     } = req.body
 
@@ -110,9 +110,9 @@ router.post("/", async (req, res) => {
                         }
                     ],
                     gender: gender,
-                    // deceasedBoolean: deceasedBoolean,
+                    deceasedBoolean: deceasedBoolean,
                     birthDate: birthDate,
-                    // maritalStatus: addMaritalStatus(maritialStatus),
+                    maritalStatus: addMaritalStatus(maritialStatus),
                     telecom: [
                         {
                             system: 'phone',
