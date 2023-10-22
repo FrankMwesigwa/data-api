@@ -2,7 +2,7 @@ import express from 'express';
 import cors from "cors";
 import logger from 'morgan';
 import bodyParser from 'body-parser';
-import swaggerUi from 'swagger-ui-express';
+// import swaggerUi from 'swagger-ui-express';
 
 import dotenv from "dotenv";
 
@@ -23,7 +23,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use("/api/patient", patientRoutes);
-app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const server = app.listen(process.env.PORT, () => {
     console.log(`Server is connected on port ${process.env.PORT} in ${process.env.NODE_ENV}`);
