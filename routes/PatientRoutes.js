@@ -12,6 +12,24 @@ const serverUrl = 'http://165.232.114.52:8080/fhir';
 const resourceType = 'Patient';
 const uniqueId = uuidv4()
 
+/**
+ * @swagger
+ * /patient:
+ *   post:
+ *     description: Create a new patient
+ *     tags:
+ *       - patient
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: stock
+ *         description: Stock object
+ *         in: body
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: new patient
+ */
 router.post("/", async (req, res) => {
 
     const {
@@ -180,6 +198,19 @@ router.post("/", async (req, res) => {
     }
 });
 
+/**
+ * @swagger
+ * /fhir:
+ *   get:
+ *     description: Retrieve the full list of patients
+ *     tags:
+ *       - Get All Patients FHIR Model
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: Get All Patients FHIR Model
+ */
 router.get("/fhir", async (req, res) => {
     try {
         const response = await axios.get(`${serverUrl}/${resourceType}`);
@@ -207,6 +238,25 @@ const getPatientByNames = async (familyName, givenName) => {
     }
 };
 
+/**
+ * @swagger
+ * /search:
+ *   get:
+ *     description: Search Patient by FamilyName and GivenName
+ *     tags:
+ *       - Search Patient by FamilyName and GivenName
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: familyname
+ *         description: first name of the patient
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Search Patient by FamilyName and GivenName
+ */
 router.get("/search", async (req, res) => {
     const { familyName, givenName } = req.query;
 

@@ -1,0 +1,126 @@
+export default {
+    swaggerDoc: {"swagger": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "eAFYA FHIR Mediator APIs",
+      "description": "API documentation for eAFYA EMR consuming FHIR Based Resources",
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "basePath": "/",
+    "tags": [
+      {
+        "name": "Patient",
+        "description": "API for Patient Resource"
+      }
+    ],
+    "produces": ["application/json"],
+    "paths": {
+      "/patient": {
+        "get": {
+          "tags": ["Patients"],
+          "summary": "Get all Patients",
+          "responses": {
+            "200": {
+              "description": "ok",
+              "schema": {
+                "$ref": "#/definitions/Patient"
+              }
+            }
+          }
+        }
+      },
+      "/user": {
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "description": "Id of the user which is to be searched",
+            "type": "integer"
+          }
+        ],
+        "produces": ["application/json"],
+        "get": {
+          "tags": ["Users"],
+          "summary": "Get user by id",
+          "responses": {
+            "200": {
+              "description": "ok",
+              "schema": {
+                "$ref": "#/definitions/User"
+              }
+            },
+            "404": {
+              "description": "not found"
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "User": {
+        "required": ["name", "_id", "companies"],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "uniqueItems": true
+          },
+          "name": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "address": {
+            "type": "object",
+            "properties": {
+              "street": {
+                "type": "string"
+              },
+              "suite": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "zipcode": {
+                "type": "string"
+              }
+            }
+          },
+          "phone": {
+            "type": "string"
+          },
+          "website": {
+            "type": "string"
+          },
+          "company": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "catchPhrase": {
+                "type": "string"
+              },
+              "bs": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "Users": {
+        "type": "array",
+        "$ref": "#/definitions/User"
+      }
+    }
+  }
+}
+  };
