@@ -45,9 +45,9 @@ router.post("/", async (req, res) => {
         entry: [
             {
                 resource: {
-                    // fullUrl: `urn:uuid:${uniqueId}`,
+                    fullUrl: `urn:uuid:${uniqueId}`,
                     resourceType: "Patient",
-                    // id: uniqueId,
+                    id: uniqueId,
                     identifier: [
                         {
                             system: 'http://clientregistry.org/nationalId',
@@ -166,7 +166,7 @@ router.post("/", async (req, res) => {
 
     try {
         const response = await axios.post(`${serverUrl}`, patientResource);
-        res.json({"message": "Patient Resource Created Successfully", response: response.data })
+        res.json({ "message": "Patient Resource Created Successfully", response: response.data })
     } catch (error) {
         res.json({ "message": "Error Creating Patient Resource:", "error": error.message })
     }
@@ -182,14 +182,41 @@ router.get("/fhir", async (req, res) => {
     }
 });
 
-const getPatientByNames = async (familyName, givenName) => {
+const getPatientByNames = async (familyName, givenName, birthDate, phoneNumber, id, NationalID, PatientId, uniquePatientId) => {
 
     try {
+        const params = {};
+
+        if (familyName) {
+            params.family = familyName;
+        }
+
+        if (givenName) {
+            params.given = givenName;
+        }
+
+        if (birthDate) {
+            params.birthdate = birthDate;
+        }
+
+        if (phoneNumber) {
+            params.telecom = phoneNumber;
+        }
+
+        if (id) {
+            params._id = id;
+        }
+
+        if (PatientId) {
+            params.identifier = `http://clientregistry.org/patientId|${PatientId}`
+        }
+
+        if (uniquePatientId) {
+            params.identifier = `UgandaEMR|${uniquePatientId}`
+        }
+
         const response = await axios.get(`${serverUrl}/${resourceType}`, {
-            params: {
-                family: familyName,
-                given: givenName,
-            }
+            params: params
         });
 
         const patients = response.data.entry.map(entry => entry.resource);
@@ -200,12 +227,14 @@ const getPatientByNames = async (familyName, givenName) => {
 };
 
 router.get("/search", async (req, res) => {
-    const { familyName, givenName } = req.query;
+    const { familyName, givenName, birthDate, phoneNumber, id, NationalID, PatientId, uniquePatientId } = req.query;
 
     try {
-        const patients = await getPatientByNames(familyName, givenName);
+        const patients = await getPatientByNames(familyName, givenName, birthDate, phoneNumber, id,
+            NationalID, PatientId, uniquePatientId);
 
         const mappedPatients = patients.map(patient => ({
+            id: patient._id,
             ugandaEMRId: getIdentifierValue(patient, "OpenMRS ID"),
             eAFYAId: getIdentifierValue(patient, "eAFYA System ID"),
             uniquePatientId: getIdentifierValue(patient, "Patient Unique  ID Code (UIC)"),
