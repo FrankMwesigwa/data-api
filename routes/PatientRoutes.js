@@ -182,10 +182,11 @@ router.get("/fhir", async (req, res) => {
     }
 });
 
-const getPatientByNames = async (familyName, givenName, birthDate, phoneNumber, id, NationalID, PatientId, uniquePatientId) => {
+const getPatientByNames = async (familyName, givenName, birthDate, phoneNumber, id, nationalId, patientId, uniquePatientId) => {
 
     try {
         const params = {};
+        const identifierSearchStrings = [];
 
         if (familyName) {
             params.family = familyName;
@@ -207,17 +208,35 @@ const getPatientByNames = async (familyName, givenName, birthDate, phoneNumber, 
             params._id = id;
         }
 
-        if (PatientId) {
-            params.identifier = `http://clientregistry.org/patientId|${PatientId}`
+        // if (passport) {
+        //     params.identifier = passport
+        // }
+
+        if (patientId) {
+            identifierSearchStrings.push(patientId);
+        }
+        
+        if (nationalId) {
+            identifierSearchStrings.push(nationalId);
+        }
+        
+        if (passport) {
+            identifierSearchStrings.push(passport);
         }
 
         if (uniquePatientId) {
-            params.identifier = `UgandaEMR|${uniquePatientId}`
+            identifierSearchStrings.push(uniquePatientId);
+        }
+
+        if (identifierSearchStrings.length > 0) {
+            params.identifier = identifierSearchStrings.join(',');
         }
 
         const response = await axios.get(`${serverUrl}/${resourceType}`, {
             params: params
         });
+
+        console.log("paramas ====>", params)
 
         const patients = response.data.entry.map(entry => entry.resource);
         return patients;
@@ -227,11 +246,11 @@ const getPatientByNames = async (familyName, givenName, birthDate, phoneNumber, 
 };
 
 router.get("/search", async (req, res) => {
-    const { familyName, givenName, birthDate, phoneNumber, id, NationalID, PatientId, uniquePatientId } = req.query;
+    const { familyName, givenName, birthDate, phoneNumber, id, nationalId, patientId, uniquePatientId } = req.query;
 
     try {
         const patients = await getPatientByNames(familyName, givenName, birthDate, phoneNumber, id,
-            NationalID, PatientId, uniquePatientId);
+            nationalId, patientId, uniquePatientId);
 
         const mappedPatients = patients.map(patient => ({
             id: patient._id,
