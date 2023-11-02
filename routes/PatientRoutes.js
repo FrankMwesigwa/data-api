@@ -236,8 +236,6 @@ const getPatientByNames = async (familyName, givenName, birthDate, phoneNumber, 
             params: params
         });
 
-        console.log("paramas ====>", params)
-
         const patients = response.data.entry.map(entry => entry.resource);
         return patients;
     } catch (error) {
