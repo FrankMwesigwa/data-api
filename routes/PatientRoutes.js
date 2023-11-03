@@ -182,11 +182,10 @@ router.get("/fhir", async (req, res) => {
     }
 });
 
-const getPatientByNames = async (familyName, givenName, birthDate, phoneNumber, id, nationalId, patientId, uniquePatientId) => {
+const getPatientByNames = async (familyName, givenName, birthDate, phoneNumber, id, identifier) => {
 
     try {
         const params = {};
-        const identifierSearchStrings = [];
 
         if (familyName) {
             params.family = familyName;
@@ -208,28 +207,8 @@ const getPatientByNames = async (familyName, givenName, birthDate, phoneNumber, 
             params._id = id;
         }
 
-        // if (passport) {
-        //     params.identifier = passport
-        // }
-
-        if (patientId) {
-            identifierSearchStrings.push(patientId);
-        }
-        
-        if (nationalId) {
-            identifierSearchStrings.push(nationalId);
-        }
-        
-        if (passport) {
-            identifierSearchStrings.push(passport);
-        }
-
-        if (uniquePatientId) {
-            identifierSearchStrings.push(uniquePatientId);
-        }
-
-        if (identifierSearchStrings.length > 0) {
-            params.identifier = identifierSearchStrings.join(',');
+        if (identifier) {
+            params.identifier = identifier
         }
 
         const response = await axios.get(`${serverUrl}/${resourceType}`, {
@@ -244,10 +223,10 @@ const getPatientByNames = async (familyName, givenName, birthDate, phoneNumber, 
 };
 
 router.get("/search", async (req, res) => {
-    const { familyName, givenName, birthDate, phoneNumber, id, nationalId, patientId, uniquePatientId } = req.query;
+    const { familyName, givenName, birthDate, phoneNumber, id, identifier, nationalId, patientId, uniquePatientId } = req.query;
 
     try {
-        const patients = await getPatientByNames(familyName, givenName, birthDate, phoneNumber, id,
+        const patients = await getPatientByNames(familyName, givenName, birthDate, phoneNumber, id, identifier,
             nationalId, patientId, uniquePatientId);
 
         const mappedPatients = patients.map(patient => ({
