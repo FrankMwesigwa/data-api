@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
-const serverUrl = 'http://104.248.21.177:8080/fhir';
+const serverUrl = 'http://165.227.170.84:9091/fhir';
 const resourceType = 'Patient';
 const uniqueId = uuidv4()
 
