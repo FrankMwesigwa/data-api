@@ -1,0 +1,40 @@
+{
+    "urn": "urn:mediator:76b53e99-52bd-4738-ab29-7242bb5d789",
+    "version": "1.0.0",
+    "name": "Json To FHIR Conversion Mediator",
+    "description": "Converts JSON to FHIR Resources",
+    "defaultChannelConfig": [
+        {
+            "name": "Json To FHIR Conversion Channel",
+            "urlPattern": "^/json$",
+            "routes": [
+                {
+                    "name": "HAPI FHIR Route",
+                    "host": "hapi.fhir.org",
+                    "path": "/baseR4/Patient",
+                    "port": "80",
+                    "primary": true,
+                    "type": "http"
+                }
+            ],
+            "allow": [
+                "admin"
+            ],
+            "methods": [
+                "GET",
+                "POST"
+            ],
+            "type": "http"
+        }
+    ],
+    "endpoints": [
+        {
+            "name": "HAPI FHIR Route Endpoint",
+            "host": "hapi.fhir.org",
+            "path": "/baseR4/Patient",
+            "port": "80",
+            "primary": true,
+            "type": "http"
+        }
+    ]
+}

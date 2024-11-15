@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
-const serverUrl = 'http://165.227.170.84:9091/fhir';
+const serverUrl = 'https://hapi-dev.health.go.ug/fhir';
 const resourceType = 'Patient';
 const uniqueId = uuidv4()
 
@@ -170,6 +170,11 @@ router.post("/", async (req, res) => {
     } catch (error) {
         res.json({ "message": "Error Creating Patient Resource:", "error": error.message })
     }
+});
+
+router.post("/t", async (req, res) => {
+    console.log(req.body)
+
 });
 
 router.get("/fhir", async (req, res) => {
